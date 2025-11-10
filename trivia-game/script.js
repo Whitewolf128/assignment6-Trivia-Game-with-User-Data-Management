@@ -103,5 +103,34 @@ document.addEventListener("DOMContentLoaded", function () {
     function handleFormSubmit(event) {
         event.preventDefault();
         //... form submission logic including setting cookies and calculating score
+        setCookies("username", "Wolf",12);
+        console.log(document.cookie);
+        let test = getCookies("username");
+        console.log(test);
+    }
+    function setCookies(name,value,days)
+    {
+        //variables
+        let expires = "";
+        //An if statement that sets up the expiry date
+        if(days)
+        {
+            //setting an expire date
+            const date = new Date();
+            date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+            expires = "; expires=" + date.toUTCString();
+        }
+        //Creating a cookie
+        document.cookie = name + "=" + value + "; path=/"
+        console.log("Cookies set:", document.cookie);
+    }
+    //Gets the cookie data
+    function getCookies(name)
+    {
+        //returns the cookie
+        return document.cookie
+        .split("; ")
+        .find((row)=> row.startsWith(`${name}=`))
+        ?.split("=")[1];
     }
 });

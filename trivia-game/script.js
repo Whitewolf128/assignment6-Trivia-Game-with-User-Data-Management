@@ -5,7 +5,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("trivia-form");
     const questionContainer = document.getElementById("question-container");
     const newPlayerButton = document.getElementById("new-player");
-
+    const uname = document.getElementById("username")
+    const uscore = document.getElementById("score")
     // Initialize the game
     // checkUsername(); Uncomment once completed
     fetchQuestions();
@@ -103,11 +104,15 @@ document.addEventListener("DOMContentLoaded", function () {
     function handleFormSubmit(event) {
         event.preventDefault();
         //... form submission logic including setting cookies and calculating score
-        setCookies("user", "Wolf",12);
-        console.log(document.cookie);
-        let test = getCookies("user");
-        console.log(test);
+        saveUser();
     }
+    /**
+     * Sets a cookie.
+     * @param {string} name - The name of the cookie.
+     * @param {string} value - The value of the cookie.
+     * @param {number} days - The number of days to store the cookie.
+     */
+
     function setCookies(name,value,days)
     {
         //variables
@@ -121,9 +126,15 @@ document.addEventListener("DOMContentLoaded", function () {
             expires = "; expires=" + date.toUTCString();
         }
         //Creating a cookie
-        document.cookie = name + "=" + value + "; path=/"
+        document.cookie = name + "=" + (value || "") + expires + "; path=/";
         console.log("Cookies set:", document.cookie);
     }
+
+    /**
+     * Gets a cookie by name.
+     * @param {string} name - The name of the cookie to get.
+     * @returns {string|null} - The value of the cookie or null if not found.
+     */
     //Gets the cookie data
     function getCookies(name)
     {
@@ -132,5 +143,36 @@ document.addEventListener("DOMContentLoaded", function () {
         .split("; ")
         .find((row)=> row.startsWith(`${name}=`))
         ?.split("=")[1];
+    }
+
+    function saveUser()
+    {
+        const name = uname.value.trim();
+        const score = uscore.value();
+
+        if(name)
+        {
+            setCookies(uname, uscore, 3);
+        }
+        else
+        {
+            alert("Enter a valid name");
+        }
+    }
+
+    function updateDisplay()
+    {
+        const savedName = getCookie("username");
+        const savedScore = getCookies("score")
+
+        const tbody = document.getElementById("table").getElementsByTagName("tbody")[0];
+
+        const newRow = tbody.insertRow();
+
+        cell1 = newRow.insertCell(0);
+        cell2 = newRow.insertCell(1);
+
+        cell1.innerHTML += uname;
+        cell2.innerHTML += uscore;
     }
 });
